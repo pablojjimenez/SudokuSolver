@@ -19,7 +19,7 @@ class Sudoku:
         vector = self.cells[cell].ns.copy()
         for i in vector:
             if value != i:
-                self.cells[cell].delete(i)
+                self.delete(cell, i)
 
     def delete(self, cell: int, value: int):
         self.cells[cell].delete(value)
