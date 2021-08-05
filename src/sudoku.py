@@ -1,8 +1,28 @@
 from posibles import *
 
 class Sudoku:
-    def __init__(self):
+    def __init__(self, sudoku: str):
         self.cells = [Possibles() for i in range(1, 82)]
+        c = 0
+        for i in sudoku:
+            if i != '0' and i != '.':
+                self.assign(c,int(i)) 
+            c += 1
+        
+
+    def is_solved(self) -> bool:
+        for i in self.cells:
+            if not i.only_one(): return False
+        return True
+
+    def assign(self, cell: int, value: int) -> bool:
+        vector = self.cells[cell].ns.copy()
+        for i in vector:
+            if value != i:
+                self.cells[cell].delete(i)
+
+    def delete(self, cell: int, value: int):
+        self.cells[cell].delete(value)
 
     def __str__(self) -> str:
         board = []
@@ -22,7 +42,8 @@ class Sudoku:
             first = True
 
             if (r%3 == 0) and (not first2):
-                s += '-'.join('\n')
+                s += '-'*95
+                s += '\n'
             else: 
                 first2 = False  
             r += 1
