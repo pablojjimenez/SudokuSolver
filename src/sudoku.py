@@ -2,12 +2,12 @@ from posibles import *
 
 class Sudoku:
 
-    def __init__(self, sudoku: str):
+    def __init__(self, sudoku: str, log = None):
         self.groups     = [[] for i in range(27)]
         self.groups_of  = {} #<int, (3)>
         self.neighbours = [[] for i in range(82)]
         self.cells = [Possibles() for i in range(1, 82)]
-        
+        self.log = log
         self.initialize_utils()
         '''
         c = 0
@@ -32,15 +32,19 @@ class Sudoku:
                 for w in g:
                     self.groups[w].append(k)
                     self.groups_of[k] = g
+        self.log.info('generados grupos')
+        self.log.info(str(self.groups_of))
+        self.log.info('generados grupos de')
+        self.log.info(str(self.groups_of))
         # neighbours
-        print(len(self.groups_of[k]) - 1)
-        for k in range(len(self.neighbours)):
-            for i in range(len(self.groups_of[k]) - 1):
+        for k in range(len(self.neighbours) - 1):
+            for i in range(len(self.groups_of[k])):
                 for j in range(9):
                     k2 = self.groups[self.groups_of[k][i]][j]
                     if k2 != k:
                         self.neighbours[k].append(k2)
-        
+        self.log.info('generados vecinos')
+        self.log.info(str(self.neighbours))
     def is_solved(self) -> bool:
         for i in self.cells:
             if not i.only_one(): return False
