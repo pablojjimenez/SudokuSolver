@@ -9,13 +9,13 @@ class Sudoku:
         self.cells = [Possibles() for i in range(1, 82)]
         self.log = log
         self.initialize_utils()
-        '''
+        
         c = 0
         for i in sudoku:
             if i != '0' and i != '.':
                 self.assign(c,int(i)) 
             c += 1
-        '''
+        
         
     def initialize_utils(self):
         """
@@ -45,19 +45,53 @@ class Sudoku:
                         self.neighbours[k].append(k2)
         self.log.info('generados vecinos')
         self.log.info(str(self.neighbours))
+    
     def is_solved(self) -> bool:
         for i in self.cells:
             if not i.only_one(): return False
         return True
 
     def assign(self, cell: int, value: int) -> bool:
+        
+        self.log.info(f'quiero la cell {cell}')
         vector = self.cells[cell].ns.copy()
+        
         for i in vector:
             if value != i:
-                self.delete(cell, i)
+                if not self.delete(cell, i): return False
+        return True
 
-    def delete(self, cell: int, value: int):
+    def delete(self, cell: int, value: int) -> bool:
+        if not self.cells[cell].is_active(value):
+            return True
+        
         self.cells[cell].delete(value)
+        N_ACT = self.cells[cell].num_possibles()
+        if N_ACT == 0:
+            return False
+        elif N_ACT == 1:
+            valor = self.cells[cell].candidate()
+            for i in range(len(self.neighbours[cell])):
+                self.log.info(self.neighbours[cell])
+                self.log.info(self.neighbours[cell][i])
+                if not self.delete(self.neighbours[cell][i], value):
+                    # no he  conseguido eliminarlos
+                    return False
+        
+        for i in range(len(self.groups_of[cell])):
+            X = self.groups_of[cell][i]
+            n = 0
+            ks = None
+            for j in range(9):
+                p = self.groups[X][j]
+                if self.cells[p].is_active(value):
+                    n += 1
+                    ks = p
+            if n == 0: return True
+            elif n == 1: 
+                if not self.assign(ks, value):
+                    return False
+        return True
 
     def __str__(self) -> str:
         board = []

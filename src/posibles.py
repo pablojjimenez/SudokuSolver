@@ -19,6 +19,9 @@ class Possibles:
     def has(self, value: int) -> bool:
         return value in self.ns
 
+    def is_active(self, value: int) -> bool:
+        return value in self.ns
+
     def __str__(self) -> str:
         s = ''
         for i in self.ns:
