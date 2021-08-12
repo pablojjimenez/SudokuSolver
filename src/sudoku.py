@@ -62,11 +62,13 @@ class Sudoku:
         return True
 
     def delete(self, cell: int, value: int) -> bool:
+        
         if not self.cells[cell].is_active(value):
             return True
         
         self.cells[cell].delete(value)
         N_ACT = self.cells[cell].num_possibles()
+        
         if N_ACT == 0:
             return False
         elif N_ACT == 1:
@@ -74,7 +76,7 @@ class Sudoku:
             for i in range(len(self.neighbours[cell])):
                 self.log.info(self.neighbours[cell])
                 self.log.info(self.neighbours[cell][i])
-                if not self.delete(self.neighbours[cell][i], value):
+                if not self.delete(self.neighbours[cell][i], valor):
                     # no he  conseguido eliminarlos
                     return False
         
